@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0d12">
+<title>Fast Track AI — Fundamentals to Production Agents</title>
+<style>
+:root{--bg:#0b0d12;--panel:#12151d;--panel2:#181c26;--line:#252a37;--text:#e7e9ee;--muted:#9aa3b5;--dim:#6b7385;--accent:#7c5cff;--accent2:#22d3ee;--ok:#34d399;--warn:#fbbf24;--fast:#f472b6;--r:14px}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--accent2);text-decoration:none}a:hover{text-decoration:underline}
+button,input,textarea{font:inherit;color:inherit}
+.app{display:grid;grid-template-columns:290px 1fr;min-height:100vh}
+aside{background:var(--panel);border-right:1px solid var(--line);padding:18px 14px;position:sticky;top:0;height:100vh;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;margin:0 6px 16px}
+.logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;font-weight:800;color:#0b0d12}
+.brand h1{font-size:17px;margin:0;letter-spacing:.2px}.brand small{color:var(--muted);display:block;font-size:12px}
+nav button{display:block;width:100%;text-align:left;background:none;border:0;border-radius:10px;padding:9px 10px;cursor:pointer;color:var(--text)}
+nav button:hover{background:var(--panel2)}nav button.active{background:var(--panel2);box-shadow:inset 3px 0 0 var(--accent)}
+.navrow{display:flex;justify-content:space-between;gap:8px;font-size:14px}.navrow span:last-child{color:var(--muted);font-size:12px;white-space:nowrap}
+.bar{height:6px;background:#232838;border-radius:99px;overflow:hidden;margin-top:6px}.bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:99px;transition:width .3s}
+.bar.big{height:10px}
+.side-tools{margin-top:16px;border-top:1px solid var(--line);padding-top:14px;display:grid;gap:8px}
+.btn{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px 12px;cursor:pointer;font-size:14px}
+.btn:hover{border-color:#3a4256}.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}.btn.danger{color:#fca5a5}
+main{padding:22px clamp(14px,3vw,36px) 80px;max-width:1040px;width:100%}
+.topbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:16px}
+.stats{display:flex;flex-wrap:wrap;gap:10px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px 12px;min-width:92px}
+.stat b{display:block;font-size:18px}.stat span{color:var(--muted);font-size:12px}
+.toggle{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px 12px;cursor:pointer;user-select:none}
+.switch{width:40px;height:22px;border-radius:99px;background:#2a3042;position:relative;transition:.2s;flex:none}.switch::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:.2s}
+.toggle.on .switch{background:var(--fast)}.toggle.on .switch::after{left:21px}
+.toggle small{display:block;color:var(--muted);font-size:12px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;margin-bottom:14px}
+.overall{display:flex;flex-wrap:wrap;align-items:center;gap:16px}.overall .grow{flex:1;min-width:220px}
+.next{background:linear-gradient(135deg,rgba(124,92,255,.18),rgba(34,211,238,.10));border-color:#3b3470}
+.next .label{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--accent2);font-weight:700}
+.next h3{margin:4px 0 6px;font-size:18px}
+.muted{color:var(--muted)}.dim{color:var(--dim)}
+.mod-head h2{margin:0 0 4px;font-size:24px}.mod-head p{margin:0 0 10px;color:var(--muted)}
+.lesson{border-left:3px solid transparent}.lesson.fast{border-left-color:var(--fast)}
+.lesson.complete{opacity:.78}.lesson.complete h3{text-decoration:line-through;text-decoration-color:var(--dim)}
+.lhead{display:flex;gap:12px;align-items:flex-start}
+.lhead h3{margin:0;font-size:16.5px;flex:1}
+.badges{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 4px}
+.badge{font-size:11.5px;padding:2px 8px;border-radius:99px;background:#202535;color:var(--muted);border:1px solid var(--line)}
+.badge.fast{background:rgba(244,114,182,.12);color:var(--fast);border-color:rgba(244,114,182,.35)}
+.badge.video{color:#fca5a5}.badge.course{color:#a5b4fc}.badge.reading{color:#86efac}.badge.paper{color:#fcd34d}
+.why{margin:6px 0 10px;color:#cdd2dc}
+.res{list-style:none;padding:0;margin:0 0 10px;display:grid;gap:6px}
+.res li{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:7px 10px}
+.res li a{flex:1;min-width:200px}
+.ex{background:#141826;border:1px dashed #333a50;border-radius:10px;padding:9px 12px;margin-bottom:8px}
+.ex b{color:var(--warn);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.checks{display:flex;gap:16px;flex-wrap:wrap;margin-top:6px}
+label.chk{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px}
+label.chk input{width:18px;height:18px;accent-color:var(--ok);cursor:pointer}
+details.notes summary{cursor:pointer;color:var(--muted);font-size:13.5px;margin-top:8px}
+details.notes textarea{width:100%;min-height:90px;margin-top:8px;background:#0f121a;border:1px solid var(--line);border-radius:10px;padding:10px;resize:vertical}
+.hasnote{color:var(--accent2)!important}
+.quiz .q{border-top:1px solid var(--line);padding:10px 0}.quiz .q:first-of-type{border-top:0}
+.quiz .a{display:none;margin-top:8px;background:#0f1a17;border:1px solid #1f3a31;border-radius:10px;padding:9px 12px;color:#c9f5e3}
+.quiz .q.open .a{display:block}
+.reveal{background:none;border:1px solid var(--line);border-radius:8px;padding:3px 10px;cursor:pointer;color:var(--accent2);font-size:13px;margin-top:6px}
+.project{border-color:#4a3d16;background:linear-gradient(135deg,rgba(251,191,36,.08),transparent)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.mcard{cursor:pointer}.mcard:hover{border-color:#3a4256}.mcard h4{margin:0 0 4px;font-size:15px}
+table.sched{width:100%;border-collapse:collapse;font-size:14px}table.sched th,table.sched td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}table.sched th{color:var(--muted);font-weight:600}
+.tabs{display:flex;gap:8px;margin-bottom:10px}.tabs button{background:var(--panel2);border:1px solid var(--line);border-radius:99px;padding:5px 12px;cursor:pointer}.tabs button.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#1f2433;border:1px solid var(--line);padding:10px 16px;border-radius:12px;opacity:0;transition:.25s;pointer-events:none;z-index:50}.toast.show{opacity:1}
+.mobile-top{display:none}
+@media (max-width:860px){
+ .app{grid-template-columns:1fr}
+ aside{position:fixed;inset:0 auto 0 0;width:84%;max-width:320px;z-index:40;transform:translateX(-105%);transition:transform .25s;box-shadow:0 0 40px rgba(0,0,0,.6)}
+ aside.open{transform:none}
+ .scrim{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:39;display:none}.scrim.show{display:block}
+ .mobile-top{display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:30;background:rgba(11,13,18,.92);backdrop-filter:blur(8px);padding:10px 14px;border-bottom:1px solid var(--line)}
+ .mobile-top .btn{padding:6px 10px}
+ .mobile-top .t{font-weight:700;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ main{padding-top:14px}
+ .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;width:100%}
+ .stat{min-width:0;padding:6px 8px}.stat b{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.stat span{font-size:10.5px;line-height:1.2;display:block}
+ .next p.muted{display:none}.next h3{font-size:16px}.topbar{margin-bottom:10px;gap:8px}.card{padding:14px}
+ .toggle{width:100%}
+ .lhead h3{font-size:15.5px}
+}
+</style>
+</head>
+<body>
+<div class="mobile-top"><button class="btn" id="menuBtn" aria-label="Open menu">☰</button><span class="t" id="mTitle">Fast Track AI</span><span class="muted" id="mPct"></span></div>
+<div class="scrim" id="scrim"></div>
+<div class="app">
+<aside id="side">
+ <div class="brand"><div class="logo">AI</div><div><h1>Fast Track AI</h1><small>Fundamentals → LLMs → Agents → Production</small></div></div>
+ <nav id="nav"></nav>
+ <div class="side-tools">
+  <button class="btn" id="exportBtn">⬇︎ Export progress (JSON)</button>
+  <button class="btn" id="importBtn">⬆︎ Import progress</button>
+  <input type="file" id="importFile" accept="application/json,.json" hidden>
+  <button class="btn danger" id="resetBtn">Reset all progress</button>
+  <p class="dim" style="font-size:12px;margin:4px 2px">Progress is saved in this browser (localStorage). Export to move it between devices.</p>
+ </div>
+</aside>
+<main id="main"></main>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const CURRICULUM = [
+{id:"m0",title:"Orientation & Fast-Track Plan",icon:"🧭",summary:"Get the big-picture map of modern AI, set up your lab, and commit to a schedule.",
+lessons:[
+{id:"m0l1",title:"The one-hour map: Intro to Large Language Models",fast:true,hours:1.5,why:"Karpathy's talk is the best single mental model of what an LLM is (a lossy compression of the internet + an assistant fine-tune) and where the field is heading. Everything else hangs off this map.",
+ res:[{t:"[1hr Talk] Intro to Large Language Models — Andrej Karpathy",u:"https://www.youtube.com/watch?v=zjkBMFhNj_g",type:"video",time:"1h"}],
+ ex:"Write a one-page 'LLM OS' diagram in your own words: pretraining, fine-tuning, tools, context window, security. Keep it — you'll revise it at the end."},
+{id:"m0l2",title:"Deep Dive into LLMs like ChatGPT",fast:false,hours:4,why:"A 3.5-hour general-audience walk-through of the full stack: data, tokenization, pretraining, SFT, RL, hallucinations and reasoning models. Great re-grounding for someone resetting from scratch.",
+ res:[{t:"Deep Dive into LLMs like ChatGPT — Andrej Karpathy",u:"https://www.youtube.com/watch?v=7xTGNNLPyMI",type:"video",time:"3h30m"}],
+ ex:"List the 3 stages of training shown in the video and, for each, write what data goes in and what behavior comes out."},
+{id:"m0l3",title:"How a practitioner actually uses LLMs",fast:false,hours:2.5,why:"Concrete patterns for getting value out of today's chat models (thinking models, tools, search, code execution, file uploads). Useful to calibrate your own day-to-day usage.",
+ res:[{t:"How I use LLMs — Andrej Karpathy",u:"https://www.youtube.com/watch?v=EWvNQjAaOHw",type:"video",time:"2h10m"}],
+ ex:"Pick one recurring task from your week and redo it with a thinking model + tool use. Note what changed."},
+{id:"m0l4",title:"What an AI Engineer is (and isn't)",fast:true,hours:1,why:"Frames the role you're training for: building products on top of foundation models rather than training them from scratch, and why evals and systems thinking matter more than ever.",
+ res:[{t:"The Rise of the AI Engineer — swyx (Latent Space)",u:"https://www.latent.space/p/ai-engineer",type:"reading",time:"20m"},
+      {t:"Software Is Changing (Again) — Andrej Karpathy, YC AI Startup School",u:"https://www.youtube.com/watch?v=LCEmiRjPEtQ",type:"video",time:"40m"}],
+ ex:"Write down the 3 AI systems you most want to be able to build by the end of this track. These become your capstone candidates."},
+{id:"m0l5",title:"Set up your lab",fast:true,hours:1,why:"A frictionless environment (Python, a GPU notebook, API keys, a Hugging Face account) removes the #1 reason people stall on hands-on work.",
+ res:[{t:"uv — Python package & project manager (docs)",u:"https://docs.astral.sh/uv/",type:"reading",time:"15m"},
+      {t:"Google Colab (free GPU notebooks)",u:"https://colab.research.google.com/",type:"reading",time:"10m"},
+      {t:"Hugging Face — create an account / Hub",u:"https://huggingface.co/",type:"reading",time:"10m"}],
+ ex:"Create a repo 'ai-fasttrack-lab' with uv, install numpy, torch and jupyter, get one API key (OpenAI or Anthropic) working in a 5-line script, and run a Colab notebook on a GPU."}
+],
+quiz:[
+{q:"What are the two main training stages Karpathy describes that turn internet text into a helpful assistant?",a:"Pretraining (next-token prediction on huge internet text → a 'base model' / document completer) and fine-tuning/post-training (SFT on curated conversations, then preference/RL tuning → an assistant)."},
+{q:"Why does Karpathy describe an LLM as a kind of operating system?",a:"The LLM is the 'CPU/kernel' and the context window is RAM; it orchestrates tools (browser, code interpreter, file system, other models) to solve problems, much like an OS coordinates resources."},
+{q:"How does an AI Engineer differ from an ML Engineer in swyx's framing?",a:"AI Engineers mostly build on top of foundation models via APIs/open weights (prompting, RAG, agents, evals, product), rather than collecting data and training models from scratch."}],
+project:{title:"Your learning contract",hours:1,desc:"Pick the 4-week or 12-week schedule below, block the time in your calendar, and write a README in your lab repo with your 3 target systems, schedule, and how you'll measure 'mastery' (e.g., shipped capstones + passed self-checks)."}
+},
+
+{id:"m1",title:"ML & Deep Learning Foundations",icon:"🧮",summary:"Just enough math — vectors, matrices, gradients, backprop — and building neural nets from scratch.",
+lessons:[
+{id:"m1l1",title:"Linear algebra intuition",fast:true,hours:1.5,why:"Every LLM is a stack of matrix multiplies. Geometric intuition for vectors, linear transforms and dot products makes attention and embeddings click instantly.",
+ res:[{t:"Essence of Linear Algebra (playlist) — 3Blue1Brown",u:"https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab",type:"video",time:"~3h total; fast track: ch. 1–4 + 9 (~1h)"}],
+ ex:"In numpy, implement matrix–vector and matrix–matrix multiply with explicit loops, check against @, and explain a dot product as 'how aligned two vectors are'."},
+{id:"m1l2",title:"What is a neural network? + gradient descent",fast:true,hours:1,why:"The cleanest visual explanation of neurons, layers, weights and how a loss is minimized by stepping downhill.",
+ res:[{t:"But what is a neural network? | Deep learning chapter 1 — 3Blue1Brown",u:"https://www.youtube.com/watch?v=aircAruvnKk",type:"video",time:"19m"},
+      {t:"Gradient descent, how neural networks learn | Chapter 2 — 3Blue1Brown",u:"https://www.youtube.com/watch?v=IHZwWFHWa-w",type:"video",time:"21m"}],
+ ex:"Implement gradient descent by hand for f(w) = (w − 3)² and for linear regression on synthetic data. Plot loss vs step for 3 learning rates."},
+{id:"m1l3",title:"Backpropagation, intuitively and with calculus",fast:true,hours:1,why:"Backprop is just the chain rule applied systematically. Owning this demystifies training, gradient issues, and every optimizer.",
+ res:[{t:"Backpropagation, intuitively | Chapter 3 — 3Blue1Brown",u:"https://www.youtube.com/watch?v=Ilg3gGewQ5U",type:"video",time:"13m"},
+      {t:"Backpropagation calculus | Chapter 4 — 3Blue1Brown",u:"https://www.youtube.com/watch?v=tIeHLnjs5U8",type:"video",time:"10m"}],
+ ex:"On paper, compute dL/dw for a 2-layer network with one hidden neuron (sigmoid) and MSE loss. Verify numerically with finite differences."},
+{id:"m1l4",title:"Build micrograd: backprop from scratch",fast:true,hours:4,why:"Karpathy builds a tiny autograd engine in ~100 lines. After this, PyTorch's autograd is no longer magic.",
+ res:[{t:"The spelled-out intro to neural networks and backpropagation: building micrograd",u:"https://www.youtube.com/watch?v=VMj-3S1tku0",type:"video",time:"2h25m"},
+      {t:"karpathy/micrograd (GitHub)",u:"https://github.com/karpathy/micrograd",type:"reading",time:"20m"},
+      {t:"Neural Networks: Zero to Hero (course page)",u:"https://karpathy.ai/zero-to-hero.html",type:"course",time:"index"}],
+ ex:"Re-implement the Value class from memory (add, mul, tanh, exp, pow, backward with topo-sort). Train a small MLP on sklearn's make_moons to >95% accuracy."},
+{id:"m1l5",title:"makemore 1: a bigram language model",fast:true,hours:3,why:"Your first language model: counts → probabilities → negative log-likelihood → the same thing as a one-layer neural net. Introduces torch tensors and the loss you'll use forever.",
+ res:[{t:"The spelled-out intro to language modeling: building makemore",u:"https://www.youtube.com/watch?v=PaCmpygFfXo",type:"video",time:"1h57m"}],
+ ex:"Train a trigram model (two characters of context) both by counting and as a neural net. Compare loss with the bigram."},
+{id:"m1l6",title:"makemore 2: MLP language model",fast:true,hours:2,why:"Embeddings, hidden layers, train/dev/test splits, learning-rate finding — the core deep learning workflow on a real model (Bengio et al. 2003).",
+ res:[{t:"Building makemore Part 2: MLP",u:"https://www.youtube.com/watch?v=TCH_1BHY58I",type:"video",time:"1h15m"}],
+ ex:"Beat Karpathy's dev loss by tuning embedding size, context length and hidden size. Log every experiment in a table."},
+{id:"m1l7",title:"makemore 3: activations, gradients & BatchNorm",fast:false,hours:2.5,why:"Why deep nets fail to train (saturation, bad init, exploding/vanishing gradients) and the diagnostics to catch it. Essential for debugging real training runs.",
+ res:[{t:"Building makemore Part 3: Activations & Gradients, BatchNorm",u:"https://www.youtube.com/watch?v=P6sfmUTpUmc",type:"video",time:"1h55m"}],
+ ex:"Plot activation and gradient histograms per layer for a 5-layer MLP with bad init vs Kaiming init vs BatchNorm."},
+{id:"m1l8",title:"makemore 4: becoming a backprop ninja",fast:false,hours:3,why:"Manually backprop through cross-entropy, BatchNorm, and an embedding table. Painful, but cements tensor-level gradient thinking.",
+ res:[{t:"Building makemore Part 4: Becoming a Backprop Ninja",u:"https://www.youtube.com/watch?v=q8SA3rM6ckI",type:"video",time:"1h55m"}],
+ ex:"Complete all exercises from the video notebook without looking at the solutions."},
+{id:"m1l9",title:"Top-down practical deep learning (fast.ai)",fast:false,hours:20,why:"The opposite approach to Karpathy: get state-of-the-art results first, then peel back layers. Great for breadth (vision, tabular, NLP) and practical intuition.",
+ res:[{t:"Practical Deep Learning for Coders — fast.ai",u:"https://course.fast.ai/",type:"course",time:"~9 lessons × 1.5h + practice"}],
+ ex:"Do Lesson 1 and deploy a tiny image classifier on Hugging Face Spaces."},
+{id:"m1l10",title:"Reference textbooks (for gaps)",fast:false,hours:4,why:"When you hit a concept you can't quite justify, these free books are the authoritative fallback for math and deep learning theory.",
+ res:[{t:"Understanding Deep Learning — Simon J.D. Prince (free PDF)",u:"https://udlbook.github.io/udlbook/",type:"reading",time:"reference"},
+      {t:"Mathematics for Machine Learning — Deisenroth, Faisal, Ong (free PDF)",u:"https://mml-book.github.io/",type:"reading",time:"reference"},
+      {t:"Deep Learning — Goodfellow, Bengio, Courville (free online)",u:"https://www.deeplearningbook.org/",type:"reading",time:"reference"}],
+ ex:"Read UDL chapter 7 (gradients & initialization) and write a half-page summary connecting it to makemore 3."}
+],
+quiz:[
+{q:"What does a gradient tell you, and why do we step in its negative direction?",a:"The gradient is the vector of partial derivatives of the loss w.r.t. each parameter — the direction of steepest increase. Stepping opposite to it decreases the loss fastest locally."},
+{q:"In one sentence, what is backpropagation?",a:"Applying the chain rule backwards through the computation graph (in reverse topological order) to compute the gradient of the loss w.r.t. every parameter efficiently."},
+{q:"Why is negative log-likelihood (cross-entropy) the standard loss for language models?",a:"Maximizing the probability the model assigns to the observed next tokens is equivalent to minimizing the average −log p(correct token); it's smooth, well-behaved, and directly measures predictive quality (perplexity = exp(loss))."},
+{q:"What symptom would tell you activations are saturating in a tanh network, and one fix?",a:"Activation histograms piled up at ±1 and tiny gradients in early layers. Fixes: scale down initial weights (e.g., Kaiming/Xavier init), add normalization (BatchNorm/LayerNorm), or use a non-saturating activation."},
+{q:"What are embeddings in the makemore MLP?",a:"A learned lookup table mapping each token (character) to a dense vector; similar tokens end up close together, and the network learns them jointly with the rest of the weights."}],
+project:{title:"Name generator in PyTorch",hours:4,desc:"Train a character-level MLP (or small RNN) on a dataset you care about (names, product names, place names). Deliver: train/dev/test losses, loss curves, activation stats, 20 samples, and a short write-up of what hyperparameters mattered most."}
+},
+
+{id:"m2",title:"Transformers & LLM Internals",icon:"🧠",summary:"Attention, tokenization, pretraining, scaling laws — and building a GPT from scratch.",
+lessons:[
+{id:"m2l1",title:"Transformers & attention, visually",fast:true,hours:1.5,why:"3Blue1Brown's visual explanation of embeddings, attention heads and how a transformer predicts the next word. The fastest route to correct intuition.",
+ res:[{t:"Transformers, the tech behind LLMs | Deep Learning Chapter 5 — 3Blue1Brown",u:"https://www.youtube.com/watch?v=wjZofJX0v4M",type:"video",time:"27m"},
+      {t:"Attention in transformers, step-by-step | Deep Learning Chapter 6 — 3Blue1Brown",u:"https://www.youtube.com/watch?v=eMlx5fFNoYc",type:"video",time:"26m"}],
+ ex:"By hand (or numpy), compute single-head scaled dot-product attention for 3 tokens with 2-dim Q, K, V. Apply a causal mask and verify rows sum to 1."},
+{id:"m2l2",title:"How might LLMs store facts (the MLP blocks)",fast:false,hours:0.5,why:"Explains what the feed-forward layers do — roughly half the parameters — and the superposition idea behind interpretability research.",
+ res:[{t:"How might LLMs store facts | Deep Learning Chapter 7 — 3Blue1Brown",u:"https://www.youtube.com/watch?v=9-Jl0dxWQs8",type:"video",time:"22m"}],
+ ex:"Count parameters in attention vs MLP for GPT-2 small (d_model=768, 12 layers). What fraction is MLP?"},
+{id:"m2l3",title:"The Illustrated Transformer + interactive explainers",fast:true,hours:1,why:"Static diagrams plus an in-browser live GPT-2 let you poke every tensor and build a precise picture of data flow.",
+ res:[{t:"The Illustrated Transformer — Jay Alammar",u:"https://jalammar.github.io/illustrated-transformer/",type:"reading",time:"30m"},
+      {t:"Transformer Explainer (interactive GPT-2) — Georgia Tech Polo Club",u:"https://poloclub.github.io/transformer-explainer/",type:"reading",time:"20m"},
+      {t:"LLM Visualization (3D walk-through) — Brendan Bycroft",u:"https://bbycroft.net/llm",type:"reading",time:"30m"}],
+ ex:"Using Transformer Explainer, change the temperature and top-k and describe how the output distribution changes."},
+{id:"m2l4",title:"Paper: Attention Is All You Need",fast:true,hours:1.5,why:"The 2017 paper that started it all. Read it now that you have intuition — you'll see which parts survived (attention, residuals, LayerNorm) and which changed (encoder-decoder, sinusoidal positions).",
+ res:[{t:"Attention Is All You Need (Vaswani et al., 2017)",u:"https://arxiv.org/abs/1706.03762",type:"paper",time:"1h"}],
+ ex:"Write a 'diff' table: original 2017 transformer vs a modern decoder-only LLM (pre-norm, RoPE, SwiGLU, GQA, no encoder)."},
+{id:"m2l5",title:"Let's build GPT: from scratch, in code",fast:true,hours:5,why:"The single most valuable video in this track. You implement self-attention, multi-head attention, residuals, LayerNorm and train a character-level GPT on Shakespeare.",
+ res:[{t:"Let's build GPT: from scratch, in code, spelled out — Andrej Karpathy",u:"https://www.youtube.com/watch?v=kCc8FmEb1nY",type:"video",time:"1h56m"},
+      {t:"karpathy/nanoGPT (GitHub)",u:"https://github.com/karpathy/nanoGPT",type:"reading",time:"30m"}],
+ ex:"Code the GPT along with the video, then train it on a different corpus (e.g., your own writing or a codebase) and sample from it."},
+{id:"m2l6",title:"Tokenization: build the GPT tokenizer",fast:true,hours:3.5,why:"Many LLM 'weirdness' bugs (spelling, arithmetic, non-English cost, trailing spaces) are tokenizer bugs. BPE is simple once you build it.",
+ res:[{t:"Let's build the GPT Tokenizer — Andrej Karpathy",u:"https://www.youtube.com/watch?v=zduSFxRajkE",type:"video",time:"2h13m"},
+      {t:"Tiktokenizer (inspect tokens interactively)",u:"https://tiktokenizer.vercel.app/",type:"reading",time:"10m"}],
+ ex:"Implement byte-level BPE training + encode/decode. Train on 1MB of text, then compare token counts with tiktoken for English, code, and another language."},
+{id:"m2l7",title:"Reproduce GPT-2 (124M)",fast:false,hours:8,why:"Moves from toy to real: mixed precision, FlashAttention, torch.compile, gradient accumulation, DDP, LR schedules and evals like HellaSwag.",
+ res:[{t:"Let's reproduce GPT-2 (124M) — Andrej Karpathy",u:"https://www.youtube.com/watch?v=l8pRSuU81PU",type:"video",time:"4h01m"}],
+ ex:"Reproduce at least the single-GPU part and measure tokens/sec before and after each optimization."},
+{id:"m2l8",title:"Pretraining & scaling laws",fast:true,hours:1.5,why:"Why bigger models + more data predictably get better, and how compute-optimal training (Chinchilla) reshaped model sizes. Core to reasoning about model choice and cost.",
+ res:[{t:"Scaling Laws for Neural Language Models (Kaplan et al., 2020)",u:"https://arxiv.org/abs/2001.08361",type:"paper",time:"45m skim"},
+      {t:"Training Compute-Optimal Large Language Models — 'Chinchilla' (Hoffmann et al., 2022)",u:"https://arxiv.org/abs/2203.15556",type:"paper",time:"45m skim"},
+      {t:"Language Models are Few-Shot Learners — GPT-3 (Brown et al., 2020)",u:"https://arxiv.org/abs/2005.14165",type:"paper",time:"optional skim"}],
+ ex:"Using the Chinchilla rule of thumb (~20 tokens per parameter, compute ≈ 6·N·D), estimate the compute-optimal tokens and FLOPs for 1B, 7B and 70B models."},
+{id:"m2l9",title:"Build an LLM from scratch (book + code)",fast:false,hours:15,why:"Sebastian Raschka's complete, well-documented path from tokenizer to pretraining to instruction fine-tuning — a great second pass that complements Karpathy.",
+ res:[{t:"rasbt/LLMs-from-scratch (GitHub)",u:"https://github.com/rasbt/LLMs-from-scratch",type:"course",time:"~15h"}],
+ ex:"Work through chapters 2–5 notebooks and load pretrained GPT-2 weights into your own implementation."},
+{id:"m2l10",title:"Modern architecture & efficiency: MoE, FlashAttention, KV cache",fast:false,hours:2,why:"What frontier models do differently: sparse Mixture-of-Experts, IO-aware attention kernels, and caching that dominates inference cost.",
+ res:[{t:"Mixture of Experts Explained — Hugging Face blog",u:"https://huggingface.co/blog/moe",type:"reading",time:"40m"},
+      {t:"FlashAttention (Dao et al., 2022)",u:"https://arxiv.org/abs/2205.14135",type:"paper",time:"45m skim"}],
+ ex:"Add a KV cache to your nanoGPT sampler and measure generation speedup for 500 tokens."},
+{id:"m2l11",title:"Stanford CS336: Language Modeling from Scratch",fast:false,hours:40,why:"The deepest free university course on building LLMs end-to-end (data, systems, scaling, alignment). For when you want true mastery of internals.",
+ res:[{t:"Stanford CS336: Language Modeling from Scratch (course site + YouTube lectures)",u:"https://cs336.stanford.edu/",type:"course",time:"~40h+ lectures & assignments"}],
+ ex:"Complete Assignment 1 (tokenizer + transformer + training loop from scratch)."}
+],
+quiz:[
+{q:"Why is the dot product QKᵀ scaled by 1/√d_k?",a:"For large d_k the dot products grow in variance, pushing softmax into saturated regions with tiny gradients. Scaling keeps the variance ≈1 so attention stays soft and trainable."},
+{q:"What does the causal mask do in a decoder-only transformer?",a:"It prevents each position from attending to future tokens (sets those scores to −∞ before softmax), so the model can be trained to predict the next token in parallel without cheating."},
+{q:"Give two LLM failure modes caused by tokenization.",a:"Examples: poor spelling/character counting (words are multi-character tokens), weak arithmetic (numbers split inconsistently), higher cost/worse quality for non-English text, sensitivity to leading/trailing spaces, and 'glitch tokens'."},
+{q:"What did Chinchilla show about the GPT-3 era models?",a:"They were under-trained: for a fixed compute budget, parameters and training tokens should scale roughly equally (~20 tokens per parameter), so smaller models trained on more data beat bigger under-trained ones."},
+{q:"What are residual connections for?",a:"They give gradients a direct path through deep stacks (easing optimization) and let each block learn an additive refinement to a shared 'residual stream'."}],
+project:{title:"Your own tiny GPT + tokenizer",hours:6,desc:"Train your own BPE tokenizer and a small GPT (nanoGPT-style) on a domain corpus you care about (e.g., your architecture docs or a codebase). Deliver: loss curves, samples, tokens/sec, and a comparison of char-level vs BPE versions."}
+},
+
+{id:"m3",title:"Using LLMs Well",icon:"💬",summary:"Prompting, structured output, tool calling, reasoning models, context engineering and first evals.",
+lessons:[
+{id:"m3l1",title:"Prompt engineering fundamentals (official guides)",fast:true,hours:1.5,why:"The providers' own guides distill what actually works: clear instructions, examples, roles, delimiters, letting the model think, and prompt chaining.",
+ res:[{t:"Prompt engineering overview — Anthropic docs",u:"https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview",type:"reading",time:"45m"},
+      {t:"Prompt engineering guide — OpenAI docs",u:"https://developers.openai.com/api/docs/guides/prompt-engineering",type:"reading",time:"30m"}],
+ ex:"Take one real prompt you use at work and rewrite it using: role, XML-tagged context, explicit output format, and 2 examples. Compare outputs on 5 inputs."},
+{id:"m3l2",title:"Anthropic's interactive prompt engineering tutorial",fast:false,hours:3,why:"Nine hands-on chapters with exercises — the most practical way to drill prompting technique.",
+ res:[{t:"anthropics/prompt-eng-interactive-tutorial (GitHub)",u:"https://github.com/anthropics/prompt-eng-interactive-tutorial",type:"course",time:"~3h"}],
+ ex:"Complete all chapter exercises including the appendix on chaining."},
+{id:"m3l3",title:"ChatGPT Prompt Engineering for Developers",fast:false,hours:1.5,why:"Short, classic DeepLearning.AI course (Andrew Ng + OpenAI) covering summarizing, inferring, transforming and expanding via the API.",
+ res:[{t:"ChatGPT Prompt Engineering for Developers — DeepLearning.AI",u:"https://www.deeplearning.ai/courses/chatgpt-prompt-eng",type:"course",time:"1h30m"}],
+ ex:"Rebuild the course's customer-service email bot against your provider of choice."},
+{id:"m3l4",title:"Structured outputs (JSON Schema)",fast:true,hours:1,why:"Production systems need machine-readable output. Schema-constrained decoding turns LLMs into reliable components instead of text generators.",
+ res:[{t:"Structured model outputs — OpenAI docs",u:"https://developers.openai.com/api/docs/guides/structured-outputs",type:"reading",time:"30m"}],
+ ex:"Define a Pydantic model for an invoice and extract it from 10 messy invoice texts. Measure field-level accuracy."},
+{id:"m3l5",title:"Function / tool calling",fast:true,hours:1.5,why:"Tool calling is the primitive every agent is built on: the model chooses a function and arguments, your code executes it, and results go back into context.",
+ res:[{t:"Function calling — OpenAI docs",u:"https://developers.openai.com/api/docs/guides/function-calling",type:"reading",time:"30m"},
+      {t:"Tool use with Claude — Anthropic docs",u:"https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview",type:"reading",time:"30m"}],
+ ex:"Implement a weather + calculator tool pair with raw API calls (no framework). Handle parallel tool calls and tool errors."},
+{id:"m3l6",title:"Reasoning: chain-of-thought to reasoning models",fast:true,hours:1,why:"Letting models 'think' before answering dramatically improves hard tasks — first via prompting (CoT), now built into reasoning models trained with RL.",
+ res:[{t:"Chain-of-Thought Prompting Elicits Reasoning in Large Language Models (Wei et al., 2022)",u:"https://arxiv.org/abs/2201.11903",type:"paper",time:"30m skim"},
+      {t:"Learning to reason with LLMs — OpenAI",u:"https://openai.com/index/learning-to-reason-with-llms/",type:"reading",time:"20m"}],
+ ex:"Run 20 multi-step word problems through a non-reasoning model with and without CoT, and through a reasoning model. Compare accuracy, latency and cost."},
+{id:"m3l7",title:"Context engineering & prompt caching",fast:true,hours:1,why:"What goes into the context window — and in what order — matters more than clever wording. Caching stable prefixes cuts cost and latency dramatically.",
+ res:[{t:"Effective context engineering for AI agents — Anthropic Engineering",u:"https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents",type:"reading",time:"25m"},
+      {t:"Prompt caching — Anthropic docs",u:"https://platform.claude.com/docs/en/build-with-claude/prompt-caching",type:"reading",time:"20m"}],
+ ex:"Restructure a long prompt so static content comes first, enable caching, and measure time-to-first-token and cost over 10 calls."},
+{id:"m3l8",title:"Lost in the middle: long-context behavior",fast:false,hours:0.75,why:"Models use information at the start and end of long contexts better than the middle — a key constraint for RAG and agent design.",
+ res:[{t:"Lost in the Middle: How Language Models Use Long Contexts (Liu et al., 2023)",u:"https://arxiv.org/abs/2307.03172",type:"paper",time:"40m"}],
+ ex:"Run a needle-in-a-haystack test on your model at 3 positions and 3 context lengths."},
+{id:"m3l9",title:"Your first evals",fast:true,hours:1.5,why:"Without evals you're tuning prompts by vibes. Start small: a handful of real cases, assertions, and an LLM-as-judge you've checked against your own labels.",
+ res:[{t:"Your AI Product Needs Evals — Hamel Husain",u:"https://hamel.dev/blog/posts/evals/",type:"reading",time:"40m"},
+      {t:"Define success criteria & build evaluations — Anthropic docs",u:"https://platform.claude.com/docs/en/test-and-evaluate/develop-tests",type:"reading",time:"25m"}],
+ ex:"Build a 20-case eval for your m3l4 extractor: code-based checks + one LLM judge. Track the score in a CSV per prompt version."}
+],
+quiz:[
+{q:"Why put stable instructions and documents at the start of a prompt?",a:"It enables prefix/prompt caching (lower cost & latency), and long-context models tend to attend best to the beginning and end of the context."},
+{q:"What's the difference between JSON mode and schema-constrained structured outputs?",a:"JSON mode only guarantees syntactically valid JSON; structured outputs constrain decoding to match a specific JSON Schema (required fields, types, enums), so outputs are reliably parseable into your types."},
+{q:"In tool calling, who actually executes the function?",a:"Your application code. The model only emits a tool name + arguments; you run it, then send the result back as a tool-result message for the model to continue."},
+{q:"Why validate an LLM-as-judge before trusting it?",a:"Judges have biases (position, verbosity, self-preference) and can misunderstand the criteria. You check agreement against human labels on a sample before using it to make decisions."}],
+project:{title:"Structured extraction CLI with evals",hours:5,desc:"Build a CLI that turns messy documents (emails, PDFs, tickets) into validated JSON via tool calling / structured outputs. Include a 20+ case eval suite, a prompt-version log with scores, and a cost/latency report per version."}
+},
+
+{id:"m4",title:"RAG & Embeddings",icon:"🔎",summary:"Embeddings, vector search, chunking, hybrid retrieval, reranking and retrieval evaluation.",
+lessons:[
+{id:"m4l1",title:"Embeddings intuition",fast:true,hours:1,why:"Embeddings map text to vectors where meaning ≈ geometry. They power semantic search, clustering, classification and RAG.",
+ res:[{t:"The Illustrated Word2vec — Jay Alammar",u:"https://jalammar.github.io/illustrated-word2vec/",type:"reading",time:"30m"},
+      {t:"Vector embeddings — OpenAI docs",u:"https://developers.openai.com/api/docs/guides/embeddings",type:"reading",time:"20m"}],
+ ex:"Embed 200 sentences from 4 topics, reduce to 2D (UMAP/PCA), plot, and find nearest neighbors with cosine similarity."},
+{id:"m4l2",title:"Vector search & ANN indexes (HNSW)",fast:true,hours:1,why:"Exact nearest-neighbor search doesn't scale. HNSW and friends trade a little recall for massive speed — knowing the knobs matters in production.",
+ res:[{t:"Hierarchical Navigable Small Worlds (HNSW) — Pinecone Learn",u:"https://www.pinecone.io/learn/series/faiss/hnsw/",type:"reading",time:"40m"}],
+ ex:"Index 100k vectors with FAISS or hnswlib; plot recall@10 vs query latency for 3 values of efSearch."},
+{id:"m4l3",title:"Paper: Retrieval-Augmented Generation",fast:false,hours:1,why:"The original RAG paper (Lewis et al.) — useful for vocabulary and to see how far the pattern has evolved.",
+ res:[{t:"Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks (Lewis et al., 2020)",u:"https://arxiv.org/abs/2005.11401",type:"paper",time:"45m"}],
+ ex:"Summarize the difference between RAG-Sequence and RAG-Token in 3 sentences."},
+{id:"m4l4",title:"Chunking strategies",fast:true,hours:0.75,why:"Chunk size and boundaries silently decide what your retriever can ever find. Bad chunking caps RAG quality no matter how good the model is.",
+ res:[{t:"Chunking Strategies for LLM Applications — Pinecone Learn",u:"https://www.pinecone.io/learn/chunking-strategies/",type:"reading",time:"30m"}],
+ ex:"Chunk the same document set 3 ways (fixed 512 tokens, recursive by headings, semantic) and compare retrieval hit rate on 15 questions."},
+{id:"m4l5",title:"Contextual retrieval, hybrid search & reranking",fast:true,hours:1,why:"Adding chunk context, combining BM25 with embeddings, and reranking the top results are the highest-ROI upgrades to a naive RAG pipeline.",
+ res:[{t:"Contextual Retrieval in AI Systems — Anthropic",u:"https://www.anthropic.com/engineering/contextual-retrieval",type:"reading",time:"25m"}],
+ ex:"Add BM25 + reciprocal rank fusion and a cross-encoder reranker to your retriever; measure recall@5 before/after."},
+{id:"m4l6",title:"Building & Evaluating Advanced RAG",fast:false,hours:1.5,why:"Short course on sentence-window and auto-merging retrieval plus the RAG triad (context relevance, groundedness, answer relevance).",
+ res:[{t:"Building and Evaluating Advanced RAG Applications — DeepLearning.AI",u:"https://www.deeplearning.ai/courses/building-evaluating-advanced-rag",type:"course",time:"1h30m"}],
+ ex:"Implement the RAG triad metrics on your own pipeline."},
+{id:"m4l7",title:"Evaluating retrieval & RAG",fast:true,hours:1.5,why:"Separate retrieval quality (recall@k, MRR) from generation quality (faithfulness, answer relevance) so you know which half to fix.",
+ res:[{t:"Ragas documentation (RAG evaluation metrics)",u:"https://docs.ragas.io/en/stable/",type:"reading",time:"45m"}],
+ ex:"Create a 30-question golden set with source passages. Compute recall@5 and MRR for retrieval, and faithfulness for answers."},
+{id:"m4l8",title:"Choosing an embedding model (MTEB)",fast:false,hours:0.5,why:"The leaderboard is a starting point, not an answer — learn to read it by task type, size and language, then validate on your data.",
+ res:[{t:"MTEB Leaderboard — Hugging Face",u:"https://huggingface.co/spaces/mteb/leaderboard",type:"reading",time:"20m"}],
+ ex:"Benchmark 3 embedding models (one small open, one large open, one API) on your golden set."},
+{id:"m4l9",title:"Vector Databases: from Embeddings to Applications",fast:false,hours:1,why:"Short course covering vector DB internals, sparse vs dense search and multi-tenancy.",
+ res:[{t:"Vector Databases: from Embeddings to Applications — DeepLearning.AI",u:"https://www.deeplearning.ai/courses/vector-databases-embeddings-applications",type:"course",time:"1h"}],
+ ex:"Port your index to a vector DB (pgvector, Qdrant, or Weaviate) and add metadata filtering."}
+],
+quiz:[
+{q:"Why is cosine similarity typically used to compare embeddings?",a:"It measures the angle between vectors, ignoring magnitude, which correlates with semantic similarity for most embedding models (and equals dot product for normalized vectors)."},
+{q:"What problem does hybrid search (BM25 + vectors) solve?",a:"Dense embeddings miss exact matches (IDs, names, rare terms, codes); BM25 catches lexical matches. Fusing both improves recall across query types."},
+{q:"Your RAG answers are wrong. How do you tell if it's retrieval or generation?",a:"Check whether the correct passage was retrieved (recall@k on a golden set). If it wasn't, fix retrieval (chunking, embeddings, hybrid, rerank). If it was but the answer is wrong/unfaithful, fix the prompt/model/context order."},
+{q:"What does a reranker do and why not use it for the first-stage search?",a:"A cross-encoder scores each (query, passage) pair jointly — much more accurate but too slow for millions of docs, so it reranks only the top-N candidates from a fast first-stage retriever."}],
+project:{title:"RAG over your own docs",hours:6,desc:"Build a RAG app over a real corpus (your docs, a codebase, or a public knowledge base) with hybrid search + reranker and citations. Deliver a 30-question golden set, retrieval metrics (recall@5, MRR), faithfulness scores, and a short analysis of failures."}
+},
+
+{id:"m5",title:"Fine-Tuning & Post-Training",icon:"🎛️",summary:"When to fine-tune, SFT, LoRA/QLoRA, RLHF and DPO.",
+lessons:[
+{id:"m5l1",title:"When to fine-tune (vs prompt vs RAG)",fast:true,hours:1,why:"Fine-tuning teaches form, style and narrow skills; RAG supplies knowledge; prompting is the cheapest first try. Picking wrong wastes weeks.",
+ res:[{t:"Finetuning Large Language Models — DeepLearning.AI",u:"https://www.deeplearning.ai/courses/finetuning-large-language-models",type:"course",time:"1h"}],
+ ex:"For your 3 target systems, write a 1-paragraph decision: prompt, RAG, fine-tune, or a combination — and why."},
+{id:"m5l2",title:"Supervised fine-tuning (SFT) with TRL",fast:true,hours:2,why:"SFT on instruction/response pairs is how base models become chat models and how you specialize open models. TRL is the standard library.",
+ res:[{t:"SFT Trainer — Hugging Face TRL docs",u:"https://huggingface.co/docs/trl/sft_trainer",type:"reading",time:"40m"},
+      {t:"Hugging Face LLM Course (chapter on fine-tuning)",u:"https://huggingface.co/learn/llm-course/chapter1/1",type:"course",time:"reference"}],
+ ex:"SFT a ~0.5B model on 1–2k instruction examples in Colab; compare outputs to the base model on 10 prompts."},
+{id:"m5l3",title:"LoRA & QLoRA (parameter-efficient fine-tuning)",fast:true,hours:1.5,why:"Train tiny low-rank adapters instead of all weights — fine-tune 7B+ models on a single GPU and swap adapters per task.",
+ res:[{t:"LoRA: Low-Rank Adaptation of Large Language Models (Hu et al., 2021)",u:"https://arxiv.org/abs/2106.09685",type:"paper",time:"40m"},
+      {t:"QLoRA: Efficient Finetuning of Quantized LLMs (Dettmers et al., 2023)",u:"https://arxiv.org/abs/2305.14314",type:"paper",time:"30m skim"},
+      {t:"PEFT — Hugging Face docs",u:"https://huggingface.co/docs/peft/index",type:"reading",time:"20m"}],
+ ex:"Redo your SFT run with LoRA (r=8 and r=64). Compare trainable params, VRAM, training time and eval score."},
+{id:"m5l4",title:"RLHF: how assistants are aligned",fast:true,hours:1.5,why:"Reward models + RL (PPO) turned GPT-3 into InstructGPT/ChatGPT. Understanding it explains sycophancy, refusals and reward hacking.",
+ res:[{t:"Illustrating Reinforcement Learning from Human Feedback (RLHF) — Hugging Face blog",u:"https://huggingface.co/blog/rlhf",type:"reading",time:"30m"},
+      {t:"Training language models to follow instructions with human feedback — InstructGPT (Ouyang et al., 2022)",u:"https://arxiv.org/abs/2203.02155",type:"paper",time:"45m skim"}],
+ ex:"Draw the 3-stage InstructGPT pipeline and annotate where human labels enter and what each stage optimizes."},
+{id:"m5l5",title:"DPO: preference tuning without RL",fast:true,hours:1,why:"Direct Preference Optimization reframes RLHF as a simple classification loss on preferred vs rejected pairs — now the default for many open models.",
+ res:[{t:"Direct Preference Optimization (Rafailov et al., 2023)",u:"https://arxiv.org/abs/2305.18290",type:"paper",time:"40m"},
+      {t:"DPO Trainer — Hugging Face TRL docs",u:"https://huggingface.co/docs/trl/dpo_trainer",type:"reading",time:"20m"}],
+ ex:"Run a small DPO pass on your SFT model with ~500 preference pairs (e.g., concise vs verbose) and measure the shift."},
+{id:"m5l6",title:"Reasoning via RL: DeepSeek-R1",fast:false,hours:1.5,why:"Shows how pure RL with verifiable rewards can produce long chain-of-thought reasoning — the recipe behind modern reasoning models.",
+ res:[{t:"DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning",u:"https://arxiv.org/abs/2501.12948",type:"paper",time:"1h"}],
+ ex:"Explain GRPO in your own words and why verifiable rewards (math, code tests) matter."},
+{id:"m5l7",title:"Constitutional AI (RLAIF)",fast:false,hours:1,why:"Using a written set of principles and AI feedback to align models — Anthropic's approach, and a useful pattern for synthetic preference data.",
+ res:[{t:"Constitutional AI: Harmlessness from AI Feedback (Bai et al., 2022)",u:"https://arxiv.org/abs/2212.08073",type:"paper",time:"45m skim"}],
+ ex:"Write a 5-principle 'constitution' for your domain and use an LLM to generate critique/revision pairs."},
+{id:"m5l8",title:"Hands-on fast fine-tuning: Unsloth & smol course",fast:false,hours:4,why:"Practical notebooks for fast, memory-efficient fine-tuning and a compact course on aligning small models.",
+ res:[{t:"Unsloth documentation",u:"https://unsloth.ai/docs",type:"reading",time:"1h"},
+      {t:"huggingface/smol-course (GitHub)",u:"https://github.com/huggingface/smol-course",type:"course",time:"~3h+"}],
+ ex:"Fine-tune a 7–8B model with QLoRA via an Unsloth notebook and export to GGUF to run locally."},
+{id:"m5l9",title:"Reinforcement Learning from Human Feedback (short course)",fast:false,hours:1,why:"Guided walkthrough of tuning a model with RLHF on preference data and evaluating the result.",
+ res:[{t:"Reinforcement Learning from Human Feedback — DeepLearning.AI",u:"https://www.deeplearning.ai/courses/reinforcement-learning-from-human-feedback",type:"course",time:"1h"}],
+ ex:"Compare the course's RLHF-tuned outputs with your DPO results qualitatively."}
+],
+quiz:[
+{q:"You need the model to know your company's constantly changing product catalog. Fine-tune or RAG?",a:"RAG — knowledge that changes frequently belongs in retrieval. Fine-tuning is better for teaching format, style, tone, or narrow skills."},
+{q:"How does LoRA reduce trainable parameters?",a:"It freezes the base weights W and learns a low-rank update ΔW = B·A (rank r ≪ d) for selected matrices, so only A and B are trained — often <1% of parameters."},
+{q:"What are the three stages of the InstructGPT/RLHF pipeline?",a:"(1) SFT on human demonstrations, (2) train a reward model on human preference rankings, (3) optimize the policy against the reward model with RL (PPO) plus a KL penalty to stay near the SFT model."},
+{q:"What's the key practical advantage of DPO over PPO-based RLHF?",a:"No separate reward model or RL loop: it optimizes a simple supervised-style loss directly on (prompt, chosen, rejected) pairs, so it's more stable, cheaper and easier to implement."}],
+project:{title:"Specialist small model",hours:6,desc:"LoRA fine-tune a small open model (e.g., 0.5–3B) on a narrow task from your work. Compare base+prompt vs base+few-shot vs fine-tuned on a held-out eval set, and report accuracy, latency and cost per 1k requests."}
+},
+
+{id:"m6",title:"Building Agents",icon:"🤖",summary:"Agent loops, tools, memory, planning, multi-agent systems and MCP.",
+lessons:[
+{id:"m6l1",title:"Building effective agents",fast:true,hours:0.75,why:"Anthropic's widely cited guide: start with simple composable workflows (chaining, routing, parallelization, orchestrator-workers, evaluator-optimizer) and only go fully agentic when needed.",
+ res:[{t:"Building effective agents — Anthropic",u:"https://www.anthropic.com/engineering/building-effective-agents",type:"reading",time:"30m"}],
+ ex:"For each of your 3 target systems, pick the simplest pattern from the article that could work and sketch it."},
+{id:"m6l2",title:"Agent fundamentals: planning, memory, tools",fast:true,hours:1.5,why:"Two of the clearest overviews of agent components, failure modes and design trade-offs.",
+ res:[{t:"LLM Powered Autonomous Agents — Lilian Weng",u:"https://lilianweng.github.io/posts/2023-06-23-agent/",type:"reading",time:"45m"},
+      {t:"Agents — Chip Huyen",u:"https://huyenchip.com/2025/01/07/agents.html",type:"reading",time:"45m"}],
+ ex:"Make a table of agent failure modes (planning, tool, efficiency) from Chip's post and one mitigation for each."},
+{id:"m6l3",title:"Paper: ReAct (reason + act)",fast:true,hours:1,why:"The interleaved thought → action → observation loop that underlies nearly every tool-using agent today.",
+ res:[{t:"ReAct: Synergizing Reasoning and Acting in Language Models (Yao et al., 2022)",u:"https://arxiv.org/abs/2210.03629",type:"paper",time:"45m"}],
+ ex:"Trace a ReAct loop by hand for the question 'Who is older, the CEO of X or the CEO of Y?' with a search tool."},
+{id:"m6l4",title:"Build an agent loop from scratch (no framework)",fast:true,hours:3,why:"An agent is a while-loop around a model with tools. Building one yourself means you'll understand (and debug) every framework.",
+ res:[{t:"Hugging Face Agents Course — Unit 1 (Introduction to Agents)",u:"https://huggingface.co/learn/agents-course/unit1/introduction",type:"course",time:"2h"},
+      {t:"Tool use with Claude — Anthropic docs",u:"https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview",type:"reading",time:"reference"}],
+ ex:"In <150 lines, build an agent with tools (web search stub, Python exec in a sandbox, file read). Add max-steps, a token budget, and a JSONL trace log."},
+{id:"m6l5",title:"Writing tools for agents",fast:true,hours:0.75,why:"Tool names, descriptions, parameters and error messages are the agent's UI. Good tool design beats prompt tweaking.",
+ res:[{t:"Writing effective tools for AI agents — using AI agents — Anthropic Engineering",u:"https://www.anthropic.com/engineering/writing-tools-for-agents",type:"reading",time:"30m"}],
+ ex:"Rewrite your agent's tool descriptions and error messages per the article; re-run 10 tasks and compare success rate."},
+{id:"m6l6",title:"Model Context Protocol (MCP)",fast:true,hours:2.5,why:"MCP is the open standard for connecting models to tools and data. Build once, plug into any MCP-capable client.",
+ res:[{t:"Model Context Protocol — official docs",u:"https://modelcontextprotocol.io/",type:"reading",time:"45m"},
+      {t:"MCP: Build Rich-Context AI Apps with Anthropic — DeepLearning.AI",u:"https://www.deeplearning.ai/courses/mcp-build-rich-context-ai-apps-with-anthropic",type:"course",time:"1h30m"}],
+ ex:"Build an MCP server exposing 2 tools and 1 resource from a system you know; connect it to an MCP client and use it."},
+{id:"m6l7",title:"Multi-agent systems",fast:true,hours:1,why:"When and how to split work across agents (orchestrator + parallel subagents), and the real costs: tokens, coordination and evaluation.",
+ res:[{t:"How we built our multi-agent research system — Anthropic Engineering",u:"https://www.anthropic.com/engineering/multi-agent-research-system",type:"reading",time:"30m"}],
+ ex:"Extend your agent into an orchestrator that spawns 3 parallel research subagents and merges results. Compare quality and token cost vs single agent."},
+{id:"m6l8",title:"Memory: beyond the context window",fast:false,hours:1,why:"Agents that run long need memory management — summarization, retrieval, and OS-style paging of context.",
+ res:[{t:"MemGPT: Towards LLMs as Operating Systems (Packer et al., 2023)",u:"https://arxiv.org/abs/2310.08560",type:"paper",time:"45m"}],
+ ex:"Add a memory tool (write/search notes) to your agent with automatic summarization when context exceeds a threshold."},
+{id:"m6l9",title:"Planning & self-reflection",fast:false,hours:1.5,why:"Reflection and search over reasoning paths can boost success on hard tasks — at a cost in tokens and latency.",
+ res:[{t:"Reflexion: Language Agents with Verbal Reinforcement Learning (Shinn et al., 2023)",u:"https://arxiv.org/abs/2303.11366",type:"paper",time:"40m"},
+      {t:"Tree of Thoughts (Yao et al., 2023)",u:"https://arxiv.org/abs/2305.10601",type:"paper",time:"40m"}],
+ ex:"Add a reflect-and-retry step after failed tool runs; measure success rate change on 10 tasks."},
+{id:"m6l10",title:"Agent frameworks & SDKs",fast:false,hours:2,why:"Once you understand the loop, frameworks save time on state, streaming, handoffs and tracing. Know the trade-offs of the main options.",
+ res:[{t:"OpenAI Agents SDK (Python) docs",u:"https://openai.github.io/openai-agents-python/",type:"reading",time:"45m"},
+      {t:"A practical guide to building agents — OpenAI (PDF)",u:"https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf",type:"reading",time:"45m"},
+      {t:"AI Agents in LangGraph — DeepLearning.AI",u:"https://www.deeplearning.ai/courses/ai-agents-in-langgraph",type:"course",time:"1h30m"}],
+ ex:"Port your from-scratch agent to one framework. List what got easier and what got harder."},
+{id:"m6l11",title:"Hugging Face Agents Course (full)",fast:false,hours:10,why:"Free, certified, hands-on course covering agent theory, smolagents, LlamaIndex, LangGraph and a final benchmarked agent.",
+ res:[{t:"Hugging Face Agents Course",u:"https://huggingface.co/learn/agents-course/unit0/introduction",type:"course",time:"~10h+"}],
+ ex:"Complete the final unit's benchmark assignment."},
+{id:"m6l12",title:"Agentic AI (Andrew Ng) & evaluating agents",fast:false,hours:6,why:"Ng's course on the four agentic design patterns (reflection, tool use, planning, multi-agent) plus a short course on systematic agent evaluation.",
+ res:[{t:"Agentic AI — DeepLearning.AI (Andrew Ng)",u:"https://www.deeplearning.ai/courses/agentic-ai/",type:"course",time:"~5h"},
+      {t:"Evaluating AI Agents — DeepLearning.AI",u:"https://www.deeplearning.ai/courses/evaluating-ai-agents",type:"course",time:"1h30m"}],
+ ex:"Define 3 agent-level metrics (task success, steps, cost) and track them for your agent over 20 tasks."}
+],
+quiz:[
+{q:"What's the difference between a 'workflow' and an 'agent' in Anthropic's framing?",a:"Workflows orchestrate LLMs and tools through predefined code paths; agents let the LLM dynamically direct its own process and tool usage. Prefer the simplest (workflow) that meets requirements."},
+{q:"What are the three repeating steps in the ReAct loop?",a:"Thought (reason about what to do), Action (call a tool with arguments), Observation (read the tool result) — repeated until the model produces a final answer."},
+{q:"Name three safeguards every agent loop should have.",a:"Examples: max steps/iterations, token or cost budget, timeouts, sandboxed tool execution, human approval for irreversible actions, and full trace logging."},
+{q:"What does MCP standardize?",a:"How applications (hosts/clients) connect to external servers that expose tools, resources and prompts to models — a common protocol so integrations are built once and reused across clients."},
+{q:"When is a multi-agent architecture worth its cost?",a:"For broad, parallelizable tasks (e.g., research across many sources) where subagents can explore independently with separate context windows; it costs many more tokens, so it's overkill for tightly coupled or simple tasks."}],
+project:{title:"From-scratch research agent + MCP server",hours:8,desc:"Build a research agent (no framework) with 3+ tools exposed through your own MCP server, step/cost budgets, JSONL traces, and a 15-task eval measuring success rate, steps and cost. Write up the top 3 failure modes you observed and how you fixed them."}
+},
+
+{id:"m7",title:"AI Engineering in Production",icon:"🚀",summary:"Evals, observability, cost/latency, guardrails, security & prompt injection, deployment.",
+lessons:[
+{id:"m7l1",title:"AI Engineering (Chip Huyen) — core chapters",fast:true,hours:6,why:"The definitive book on building applications with foundation models: evaluation, prompt engineering, RAG/agents, fine-tuning, dataset engineering, inference optimization and architecture. (Paid book; free companion repo.)",
+ res:[{t:"AI Engineering: Building Applications with Foundation Models — Chip Huyen (O'Reilly)",u:"https://www.oreilly.com/library/view/ai-engineering/9781098166298/",type:"reading",time:"fast track: ch. 3, 4, 9, 10 (~6h)"},
+      {t:"chiphuyen/aie-book — resources & chapter summaries (GitHub)",u:"https://github.com/chiphuyen/aie-book",type:"reading",time:"30m"}],
+ ex:"Draw the reference architecture from chapter 10 for one of your target systems, marking where evals, guardrails, caching and routing sit."},
+{id:"m7l2",title:"Lessons from a year of building with LLMs",fast:true,hours:1.5,why:"Tactical, operational and strategic lessons from practitioners who shipped LLM products — a dense checklist of what goes wrong.",
+ res:[{t:"What We've Learned From A Year of Building with LLMs (applied-llms.org)",u:"https://applied-llms.org/",type:"reading",time:"1h15m"}],
+ ex:"Pick the 10 lessons most relevant to your work and turn them into a team checklist."},
+{id:"m7l3",title:"Evals in depth: error analysis & LLM judges",fast:true,hours:2,why:"Error analysis on real traces → targeted evals → regression tests in CI is the core loop of shipping reliable AI. This is where most teams are weakest.",
+ res:[{t:"AI Evals: Everything You Need to Know — Hamel Husain & Shreya Shankar",u:"https://hamel.dev/blog/posts/evals-faq/",type:"reading",time:"1h"},
+      {t:"Evaluating model performance (Evals guide) — OpenAI docs",u:"https://developers.openai.com/api/docs/guides/evals",type:"reading",time:"30m"}],
+ ex:"Do open coding on 50 real traces from your m4 or m6 project, cluster failures into categories, and write one targeted eval per top category."},
+{id:"m7l4",title:"Patterns for LLM systems",fast:false,hours:1,why:"Seven patterns (evals, RAG, fine-tuning, caching, guardrails, defensive UX, user feedback) with trade-offs — a great architecture vocabulary.",
+ res:[{t:"Patterns for Building LLM-based Systems & Products — Eugene Yan",u:"https://eugeneyan.com/writing/llm-patterns/",type:"reading",time:"1h"}],
+ ex:"Map each pattern to whether your current project uses it, and which one is the next highest-leverage add."},
+{id:"m7l5",title:"Observability & tracing",fast:true,hours:1.5,why:"You can't debug or improve what you can't see. Traces of every model/tool call, with cost and latency, are table stakes in production.",
+ res:[{t:"Langfuse docs (open-source LLM observability)",u:"https://langfuse.com/docs",type:"reading",time:"45m"},
+      {t:"OpenTelemetry GenAI Semantic Conventions (GitHub)",u:"https://github.com/open-telemetry/semantic-conventions-genai",type:"reading",time:"30m"}],
+ ex:"Instrument your agent with tracing (Langfuse or OTel). Build a view showing p50/p95 latency and cost per request."},
+{id:"m7l6",title:"Cost & latency: inference and serving",fast:true,hours:1.5,why:"Model routing, caching, batching, quantization and efficient serving (PagedAttention/continuous batching) decide whether a product is economically viable.",
+ res:[{t:"vLLM documentation",u:"https://docs.vllm.ai/en/latest/",type:"reading",time:"45m"},
+      {t:"Efficient Memory Management for LLM Serving with PagedAttention (Kwon et al., 2023)",u:"https://arxiv.org/abs/2309.06180",type:"paper",time:"40m skim"}],
+ ex:"Serve a small open model with vLLM, load-test it, and compare throughput/cost per 1M tokens against an API model for your workload."},
+{id:"m7l7",title:"Security: prompt injection & the lethal trifecta",fast:true,hours:1.5,why:"Prompt injection is unsolved. Any agent with private data + untrusted content + an exfiltration channel is exploitable — design around it.",
+ res:[{t:"Prompt injection (series) — Simon Willison",u:"https://simonwillison.net/series/prompt-injection/",type:"reading",time:"45m"},
+      {t:"The lethal trifecta for AI agents — Simon Willison",u:"https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/",type:"reading",time:"15m"},
+      {t:"Not what you've signed up for: Indirect Prompt Injection (Greshake et al., 2023)",u:"https://arxiv.org/abs/2302.12173",type:"paper",time:"30m skim"}],
+ ex:"Write 10 indirect prompt-injection test cases (in docs/web pages your agent reads) and check whether your agent can be made to leak data or take unintended actions."},
+{id:"m7l8",title:"OWASP Top 10 for LLM applications",fast:true,hours:1,why:"The standard security checklist for LLM apps: injection, sensitive info disclosure, supply chain, excessive agency, and more.",
+ res:[{t:"OWASP Top 10 for LLM Applications — OWASP GenAI Security Project",u:"https://genai.owasp.org/llm-top-10/",type:"reading",time:"45m"}],
+ ex:"Threat-model your capstone candidate against all 10 risks; note one mitigation each."},
+{id:"m7l9",title:"Guardrails & safety classifiers",fast:false,hours:1,why:"Input/output rails and classifiers (e.g., Llama Guard) add defense-in-depth for policy, topic and safety constraints.",
+ res:[{t:"NVIDIA NeMo Guardrails documentation",u:"https://docs.nvidia.com/nemo/guardrails/about-nemo-guardrails-library/overview",type:"reading",time:"30m"},
+      {t:"Llama Guard: LLM-based Input-Output Safeguard (Inan et al., 2023)",u:"https://arxiv.org/abs/2312.06674",type:"paper",time:"30m"}],
+ ex:"Add an input and output guardrail to your app and measure false-positive rate on 50 benign requests."},
+{id:"m7l10",title:"Red Teaming LLM Applications",fast:false,hours:1,why:"Short course on systematically finding vulnerabilities — manual and automated red teaming.",
+ res:[{t:"Red Teaming LLM Applications — DeepLearning.AI",u:"https://www.deeplearning.ai/courses/red-teaming-llm-applications",type:"course",time:"1h"}],
+ ex:"Run an automated red-team scan against your app and fix the top 2 findings."},
+{id:"m7l11",title:"Full-stack LLM deployment",fast:false,hours:6,why:"End-to-end talks on shipping LLM apps: UX, LLMOps, augmented models, and launching.",
+ res:[{t:"LLM Bootcamp — The Full Stack",u:"https://fullstackdeeplearning.com/llm-bootcamp/",type:"course",time:"~6h"}],
+ ex:"Deploy one of your projects publicly with auth, rate limiting and a feedback (thumbs up/down) button wired into your traces."}
+],
+quiz:[
+{q:"What's the 'lethal trifecta'?",a:"An agent that combines (1) access to private data, (2) exposure to untrusted content, and (3) the ability to communicate externally — an attacker can use prompt injection to exfiltrate data. Remove at least one leg."},
+{q:"Why start evals with error analysis on real traces rather than generic metrics?",a:"Generic metrics (e.g., 'helpfulness') rarely match your actual failure modes. Reading traces reveals the specific, frequent failures, so evals target what actually matters and are actionable."},
+{q:"Name three levers for reducing LLM cost or latency.",a:"Examples: prompt/prefix caching, routing easy requests to smaller models, batching, streaming, shorter prompts/outputs, quantization, efficient serving (vLLM continuous batching), semantic caching."},
+{q:"What should be in a production LLM trace?",a:"Inputs/outputs of each model and tool call, model/version and parameters, tokens, cost, latency, errors, user/session IDs, and user feedback — linked as spans of one request."}],
+project:{title:"Harden a project for production",hours:8,desc:"Take your RAG (m4) or agent (m6) project to production quality: tracing with cost/latency dashboards, an eval suite running in CI that blocks regressions, an indirect prompt-injection test suite, guardrails, and a one-page runbook."}
+},
+
+{id:"m8",title:"Capstone Projects",icon:"🏆",summary:"Ship real systems that prove mastery. Fast track: do two; full track: do three or more.",
+lessons:[
+{id:"m8l1",title:"Capstone A: Production RAG assistant",fast:true,hours:15,why:"Proves you can ship knowledge-grounded AI: ingestion, hybrid retrieval, reranking, citations, evals, tracing, and security on a real corpus.",
+ res:[{t:"Contextual Retrieval in AI Systems — Anthropic",u:"https://www.anthropic.com/engineering/contextual-retrieval",type:"reading",time:"reference"},
+      {t:"Ragas documentation",u:"https://docs.ragas.io/en/stable/",type:"reading",time:"reference"}],
+ ex:"Ship it: public or team-internal URL, 50+ question golden set, recall@5 & faithfulness in CI, cost per query, and an injection test suite. Write a 1-page design doc."},
+{id:"m8l2",title:"Capstone B: Tool-using agent with MCP + evals",fast:true,hours:15,why:"Proves you can build reliable agents: tool design, MCP integration, budgets, human-in-the-loop for risky actions, and agent-level evals.",
+ res:[{t:"Building effective agents — Anthropic",u:"https://www.anthropic.com/engineering/building-effective-agents",type:"reading",time:"reference"},
+      {t:"Model Context Protocol — official docs",u:"https://modelcontextprotocol.io/",type:"reading",time:"reference"}],
+ ex:"Build an agent that automates a real multi-step workflow from your job. Deliver traces, a 25-task eval (success, steps, cost), and an approval gate for irreversible actions."},
+{id:"m8l3",title:"Capstone C: Fine-tune & serve a specialist model",fast:false,hours:15,why:"Proves you can own the model layer: data curation, LoRA SFT + DPO, evaluation against frontier APIs, and cost-efficient serving.",
+ res:[{t:"Hugging Face TRL documentation",u:"https://huggingface.co/docs/trl/index",type:"reading",time:"reference"},
+      {t:"vLLM documentation",u:"https://docs.vllm.ai/en/latest/",type:"reading",time:"reference"}],
+ ex:"Fine-tune an open model to match or beat a frontier API on your narrow task at <20% of the cost; serve with vLLM and publish the eval comparison."},
+{id:"m8l4",title:"Capstone D: Train your own mini-ChatGPT (nanochat)",fast:false,hours:20,why:"The ultimate internals capstone: tokenizer, pretraining, mid-training, SFT, RL, evaluation and a chat UI — the full stack in one minimal codebase.",
+ res:[{t:"karpathy/nanochat (GitHub)",u:"https://github.com/karpathy/nanochat",type:"course",time:"~4h GPU run + study"}],
+ ex:"Run the speedrun on a rented GPU node, then change one thing (data mix, model depth, or SFT data) and report its effect on the evals."},
+{id:"m8l5",title:"Stay current: reading list habit",fast:false,hours:4,why:"The field moves monthly. A curated reading list and a weekly habit keep your mastery from decaying.",
+ res:[{t:"The 2025 AI Engineering Reading List — Latent Space",u:"https://www.latent.space/p/2025-papers",type:"reading",time:"ongoing"},
+      {t:"Anthropic Engineering blog",u:"https://www.anthropic.com/engineering",type:"reading",time:"ongoing"},
+      {t:"OpenAI Cookbook",u:"https://developers.openai.com/cookbook",type:"reading",time:"ongoing"}],
+ ex:"Schedule a recurring 1-hour weekly slot: read one paper/post, try one thing, add one note here."}
+],
+quiz:[
+{q:"Can you explain, without notes, how a token flows through a transformer from input to next-token probability?",a:"Self-check: tokenize → embed (+ position info) → N blocks of [norm → masked multi-head attention → residual add → norm → MLP → residual add] → final norm → unembedding to logits → softmax (with temperature/top-p) → sample."},
+{q:"For a new AI feature request, what's your decision order?",a:"Self-check: define success + build a small eval first → try prompting/structured outputs → add RAG for knowledge → add tools/workflows → go agentic only if needed → fine-tune for format/cost/latency once you have data → harden (tracing, guardrails, security) before launch."},
+{q:"What evidence shows you've mastered this track?",a:"Self-check: 2+ shipped capstones with public/team-visible eval results, traces and design docs; you can teach each module's quiz from memory; and your revised 'LLM OS' diagram from m0 is noticeably sharper."}],
+project:{title:"Portfolio & teach-back",hours:4,desc:"Publish a portfolio page (or internal doc) with your capstones, eval results and lessons learned. Then teach one module to a colleague in 30 minutes — teaching is the final mastery test."}
+}
+];
+
+</script>
+<script>
+(function(){
+"use strict";
+const KEY="fasttrack-ai-v1";
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+const fmtH=h=>(h>=10?Math.round(h):Math.round(h*10)/10).toString()+"h";
+const today=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
+const defaults=()=>({version:1,done:{},notes:{},days:[],last:null,fastOnly:false,view:"dash"});
+let S;
+function load(){try{S=Object.assign(defaults(),JSON.parse(localStorage.getItem(KEY)||"{}"))}catch(e){S=defaults()}}
+function save(){localStorage.setItem(KEY,JSON.stringify(S))}
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove("show"),2200)}
+
+// ---- derived data
+const lessonsOf=m=>m.lessons.filter(l=>!S.fastOnly||l.fast);
+function itemsOf(m){const out=[];lessonsOf(m).forEach(l=>{out.push({id:l.id,h:l.hours*0.5});out.push({id:l.id+":ex",h:l.hours*0.5})});out.push({id:m.id+":proj",h:m.project.hours});return out}
+function modStats(m){const it=itemsOf(m);const done=it.filter(i=>S.done[i.id]).length;
+ const total=it.reduce((a,i)=>a+i.h,0),doneH=it.filter(i=>S.done[i.id]).reduce((a,i)=>a+i.h,0);
+ return{done,count:it.length,pct:it.length?Math.round(done/it.length*100):0,total,doneH}}
+function allStats(){let d=0,c=0,t=0,dh=0;CURRICULUM.forEach(m=>{const s=modStats(m);d+=s.done;c+=s.count;t+=s.total;dh+=s.doneH});return{done:d,count:c,pct:c?Math.round(d/c*100):0,total:t,doneH:dh}}
+function trackHours(fast){return CURRICULUM.reduce((a,m)=>a+m.project.hours+m.lessons.filter(l=>!fast||l.fast).reduce((x,l)=>x+l.hours,0),0)}
+function streak(){const set=new Set(S.days);let d=new Date(),n=0;const key=x=>x.getFullYear()+"-"+String(x.getMonth()+1).padStart(2,"0")+"-"+String(x.getDate()).padStart(2,"0");
+ if(!set.has(key(d)))d.setDate(d.getDate()-1);while(set.has(key(d))){n++;d.setDate(d.getDate()-1)}return n}
+function nextUp(){for(const m of CURRICULUM){for(const l of lessonsOf(m)){if(!S.done[l.id]||!S.done[l.id+":ex"])return{m,l}}if(!S.done[m.id+":proj"])return{m,proj:true}}return null}
+function markStudied(){const t=today();if(!S.days.includes(t))S.days.push(t);S.last=new Date().toISOString()}
+
+// ---- render
+function render(){renderNav();renderMain();const a=allStats();$("#mPct").textContent=a.pct+"%"}
+function renderNav(){let h=`<button data-view="dash" class="${S.view==="dash"?"active":""}"><div class="navrow"><span>📊 Dashboard</span><span>${allStats().pct}%</span></div></button>`;
+ CURRICULUM.forEach((m,i)=>{const s=modStats(m);h+=`<button data-view="${m.id}" class="${S.view===m.id?"active":""}"><div class="navrow"><span>${m.icon} ${i}. ${esc(m.title)}</span><span>${s.pct}%</span></div><div class="bar"><i style="width:${s.pct}%"></i></div></button>`});
+ $("#nav").innerHTML=h}
+function statsBar(){const a=allStats(),st=streak(),last=S.last?new Date(S.last).toLocaleDateString(undefined,{month:"short",day:"numeric"}):"—";
+ const fh=trackHours(true),ah=trackHours(false);
+ return `<div class="topbar"><div class="stats">
+  <div class="stat"><b>${a.pct}%</b><span>${S.fastOnly?"fast-track":"overall"} complete</span></div>
+  <div class="stat"><b>🔥 ${st}</b><span>day streak</span></div>
+  <div class="stat"><b>${esc(last)}</b><span>last studied</span></div>
+  <div class="stat"><b>${fmtH(a.doneH)} / ${fmtH(a.total)}</b><span>est. hours</span></div></div>
+  <div class="toggle ${S.fastOnly?"on":""}" id="fastToggle" role="switch" aria-checked="${S.fastOnly}" tabindex="0"><div class="switch"></div><div><b>Fast Track only</b><small>Essential path ≈ ${fmtH(fh)} · full ≈ ${fmtH(ah)}</small></div></div></div>
+  <div class="card overall"><div class="grow"><div class="navrow"><b>${S.fastOnly?"Fast-track progress":"Overall progress"}</b><span>${a.done}/${a.count} items</span></div><div class="bar big"><i style="width:${a.pct}%"></i></div></div></div>`}
+function nextCard(){const n=nextUp();if(!n)return `<div class="card next"><div class="label">All done</div><h3>🏆 You've completed the ${S.fastOnly?"fast track":"whole track"}.</h3><p class="muted">${S.fastOnly?"Turn off “Fast Track only” to take on the deep dives.":"Time to teach it to someone."}</p></div>`;
+ if(n.proj)return `<div class="card next"><div class="label">Next up · ${esc(n.m.title)}</div><h3>🛠 Mini project: ${esc(n.m.project.title)}</h3><p class="muted">${esc(n.m.project.desc)}</p><button class="btn primary" data-go="${n.m.id}" data-anchor="${n.m.id}-proj">Open module</button></div>`;
+ const l=n.l,r=l.res[0];const step=S.done[l.id]?"Exercise":"Lesson";
+ return `<div class="card next"><div class="label">Next up · ${esc(n.m.title)} · ${step}</div><h3>${esc(l.title)}</h3><p class="muted" style="margin:0 0 10px">${esc(l.why)}</p>
+ <div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn primary" href="${esc(r.u)}" target="_blank" rel="noopener">▶ ${esc(r.type)}: start resource</a><button class="btn" data-go="${n.m.id}" data-anchor="${l.id}">Open lesson</button></div></div>`}
+function renderMain(){const m=CURRICULUM.find(x=>x.id===S.view);$("#mTitle").textContent=m?m.title:"Dashboard";
+ let h=statsBar()+nextCard();
+ if(!m){h+=`<h2 style="margin:22px 0 10px">Modules</h2><div class="grid">`+CURRICULUM.map((m,i)=>{const s=modStats(m),ls=lessonsOf(m);return `<div class="card mcard" data-go="${m.id}"><h4>${m.icon} ${i}. ${esc(m.title)}</h4><div class="muted" style="font-size:13px">${ls.length} lessons · ≈${fmtH(ls.reduce((a,l)=>a+l.hours,0)+m.project.hours)}</div><div class="bar"><i style="width:${s.pct}%"></i></div><div class="dim" style="font-size:12px;margin-top:4px">${s.done}/${s.count} items · ${s.pct}%</div></div>`}).join("")+`</div>`;
+  h+=scheduleCard()}
+ else h+=moduleView(m);
+ $("#main").innerHTML=h;
+ document.querySelectorAll("textarea[data-note]").forEach(t=>{t.value=S.notes[t.dataset.note]||""});
+}
+function resList(l){return `<ul class="res">`+l.res.map(r=>`<li><span class="badge ${esc(r.type)}">${esc(r.type)}</span><a href="${esc(r.u)}" target="_blank" rel="noopener">${esc(r.t)}</a><span class="dim" style="font-size:12.5px">${esc(r.time)}</span></li>`).join("")+`</ul>`}
+function moduleView(m){const idx=CURRICULUM.indexOf(m),s=modStats(m),ls=lessonsOf(m);
+ let h=`<div class="mod-head" style="margin-top:20px"><h2>${m.icon} ${idx}. ${esc(m.title)}</h2><p>${esc(m.summary)}</p><div class="navrow"><span class="muted">${ls.length} lessons${S.fastOnly?" (fast track)":""} · ≈${fmtH(ls.reduce((a,l)=>a+l.hours,0)+m.project.hours)} incl. project</span><span>${s.pct}%</span></div><div class="bar big"><i style="width:${s.pct}%"></i></div></div><div style="height:14px"></div>`;
+ if(m.id==="m0")h+=scheduleCard();
+ const hidden=m.lessons.length-ls.length;
+ ls.forEach(l=>{const dl=S.done[l.id],de=S.done[l.id+":ex"],note=(S.notes[l.id]||"").trim();
+  h+=`<div class="card lesson ${l.fast?"fast":""} ${dl&&de?"complete":""}" id="${l.id}"><div class="lhead"><h3>${esc(l.title)}</h3></div>
+  <div class="badges">${l.fast?`<span class="badge fast">⚡ Fast track</span>`:`<span class="badge">Deep dive (optional)</span>`}<span class="badge">≈${fmtH(l.hours)}</span></div>
+  <p class="why">${esc(l.why)}</p>${resList(l)}
+  <div class="ex"><b>Hands-on</b><div>${esc(l.ex)}</div></div>
+  <div class="checks"><label class="chk"><input type="checkbox" data-item="${l.id}" ${dl?"checked":""}> Lesson done</label><label class="chk"><input type="checkbox" data-item="${l.id}:ex" ${de?"checked":""}> Exercise done</label></div>
+  <details class="notes"${note?" open":""}><summary class="${note?"hasnote":""}">📝 My notes${note?" (saved)":""}</summary><textarea data-note="${l.id}" placeholder="Key takeaways, links, questions…"></textarea></details></div>`});
+ if(hidden)h+=`<p class="dim" style="text-align:center">${hidden} optional deep-dive lesson${hidden>1?"s":""} hidden by “Fast Track only”.</p>`;
+ h+=`<div class="card quiz"><h3 style="margin:0 0 6px">🧪 Self-check quiz</h3>`+m.quiz.map((q,i)=>`<div class="q"><div><b>Q${i+1}.</b> ${esc(q.q)}</div><button class="reveal" data-reveal>Show answer</button><div class="a">${esc(q.a)}</div></div>`).join("")+`</div>`;
+ h+=`<div class="card project" id="${m.id}-proj"><h3 style="margin:0 0 4px">🛠 Mini project: ${esc(m.project.title)}</h3><div class="badges"><span class="badge">≈${fmtH(m.project.hours)}</span></div><p style="margin:6px 0 10px">${esc(m.project.desc)}</p><label class="chk"><input type="checkbox" data-item="${m.id}:proj" ${S.done[m.id+":proj"]?"checked":""}> Project complete</label></div>`;
+ const nx=CURRICULUM[idx+1];if(nx)h+=`<div style="text-align:right"><button class="btn primary" data-go="${nx.id}">Next module: ${esc(nx.title)} →</button></div>`;
+ return h}
+let schedTab="fast";
+function scheduleCard(){const fast=[["Week 1","0 Orientation · 1 Foundations · 2 Transformers through “Let's build GPT”","~30h"],["Week 2","2 Tokenization, scaling laws + tiny-GPT project · 3 Using LLMs well · 4 RAG lessons","~29h"],["Week 3","4 RAG project · 5 Fine-tuning & post-training · 6 Agents through MCP","~29h"],["Week 4","6 Multi-agent + agent project · 7 AI engineering in production + hardening project","~32h"],["Weeks 5–6","8 Capstones A (production RAG) + B (agent with MCP + evals)","~30h"]];
+ const full=[["Weeks 1–2","0 Orientation + all of 1 Foundations (incl. makemore 3–4, fast.ai lesson 1)"],["Weeks 3–4","2 Transformers incl. GPT-2 reproduction and LLMs-from-scratch"],["Week 5","3 Using LLMs well (incl. Anthropic tutorial)"],["Week 6","4 RAG & embeddings + project"],["Week 7","5 Fine-tuning & post-training + project"],["Weeks 8–9","6 Agents incl. HF Agents course + project"],["Week 10","7 AI engineering in production + hardening project"],["Weeks 11–12","8 Capstones (2–3) + portfolio; CS336 as stretch"]];
+ const fh=trackHours(true),ah=trackHours(false);
+ return `<div class="card"><h3 style="margin:0 0 8px">🗓 Suggested schedule</h3><div class="tabs"><button data-sched="fast" class="${schedTab==="fast"?"active":""}">4-week fast track + 2 capstone weeks (~30h/wk)</button><button data-sched="full" class="${schedTab==="full"?"active":""}">12-week full (~${Math.round(ah/12)}h/wk)</button></div>
+ ${schedTab==="fast"?`<table class="sched"><tr><th>When</th><th>Focus (⚡ lessons only)</th><th>Time</th></tr>${fast.map(r=>`<tr><td>${r[0]}</td><td>${esc(r[1])}</td><td>${r[2]}</td></tr>`).join("")}</table><p class="dim" style="font-size:13px;margin:8px 0 0">Turn on “Fast Track only” to hide deep dives. Essential path ≈ ${fmtH(fh)} including mini projects and 2 capstones — an intensive, near-full-time pace. Can only give ~10h/wk? Same order, stretched to ~15 weeks. Daily rhythm: watch/read, then do the hands-on exercise the same day.</p>`
+ :`<table class="sched"><tr><th>When</th><th>Focus (everything)</th></tr>${full.map(r=>`<tr><td>${r[0]}</td><td>${esc(r[1])}</td></tr>`).join("")}</table><p class="dim" style="font-size:13px;margin:8px 0 0">Full track ≈ ${fmtH(ah)} including all deep dives, projects and 4 capstones. CS336 alone is ~40h and can run in parallel.</p>`}</div>`}
+
+// ---- events
+document.addEventListener("click",e=>{
+ const nb=e.target.closest("nav button");if(nb){go(nb.dataset.view);return}
+ const g=e.target.closest("[data-go]");if(g&&!e.target.closest("a")){go(g.dataset.go,g.dataset.anchor);return}
+ if(e.target.closest("#fastToggle")){toggleFast();return}
+ const rv=e.target.closest("[data-reveal]");if(rv){const q=rv.parentElement;q.classList.toggle("open");rv.textContent=q.classList.contains("open")?"Hide answer":"Show answer";return}
+ const sc=e.target.closest("[data-sched]");if(sc){schedTab=sc.dataset.sched;renderMain();return}
+});
+document.addEventListener("keydown",e=>{if(e.target.id==="fastToggle"&&(e.key===" "||e.key==="Enter")){e.preventDefault();toggleFast()}});
+function toggleFast(){S.fastOnly=!S.fastOnly;save();render();toast(S.fastOnly?"Showing the essential fast-track path":"Showing all lessons")}
+function go(view,anchor){S.view=view;save();render();closeMenu();
+ if(anchor){const el=document.getElementById(anchor);if(el){el.scrollIntoView({behavior:"smooth",block:"start"});return}}window.scrollTo({top:0})}
+document.addEventListener("change",e=>{const c=e.target.closest("input[data-item]");if(!c)return;
+ const y=window.scrollY;if(c.checked){S.done[c.dataset.item]=true;markStudied()}else delete S.done[c.dataset.item];save();render();window.scrollTo(0,y)});
+let noteT;document.addEventListener("input",e=>{const t=e.target.closest("textarea[data-note]");if(!t)return;clearTimeout(noteT);const id=t.dataset.note,v=t.value;
+ noteT=setTimeout(()=>{if(v.trim())S.notes[id]=v;else delete S.notes[id];S.last=new Date().toISOString();save();const s=t.parentElement.querySelector("summary");if(s){s.textContent="📝 My notes"+(v.trim()?" (saved)":"");s.classList.toggle("hasnote",!!v.trim())}},400)});
+$("#exportBtn").onclick=()=>{const data=Object.assign({app:"fast-track-ai",exportedAt:new Date().toISOString()},S);const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+ const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="fast-track-ai-progress-"+today()+".json";document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);toast("Progress exported")};
+$("#importBtn").onclick=()=>$("#importFile").click();
+$("#importFile").onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{try{const d=JSON.parse(rd.result);
+ if(!d||typeof d!=="object"||typeof d.done!=="object")throw new Error("not a Fast Track AI export");
+ if(!confirm("Replace your current progress with the imported file?"))return;
+ const n=defaults();S={version:1,done:d.done||{},notes:d.notes||{},days:Array.isArray(d.days)?d.days:[],last:d.last||null,fastOnly:!!d.fastOnly,view:typeof d.view==="string"?d.view:"dash"};
+ Object.keys(n).forEach(k=>{if(S[k]===undefined)S[k]=n[k]});save();render();toast("Progress imported")}catch(err){alert("Import failed: "+err.message)}finally{e.target.value=""}};rd.readAsText(f)};
+$("#resetBtn").onclick=()=>{if(confirm("Reset ALL progress, notes and streak? This cannot be undone (export first if unsure).")){S=defaults();save();render();toast("Progress reset")}};
+function closeMenu(){$("#side").classList.remove("open");$("#scrim").classList.remove("show")}
+$("#menuBtn").onclick=()=>{$("#side").classList.add("open");$("#scrim").classList.add("show")};$("#scrim").onclick=closeMenu;
+load();render();
+window.__FT={get state(){return S},trackHours,allStats};
+})();
+</script>
+</body>
+</html>
